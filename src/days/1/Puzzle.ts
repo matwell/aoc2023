@@ -34,9 +34,18 @@ const first = (input: string) => {
 
 const expectedFirstSolution = 'solution 1';
 
+function allIndexesOf(toSearch: string, target: string): number[] {
+  let index = 0;
+  let indexes = [];
+
+  while ((index = toSearch.indexOf(target, index)) !== -1) {
+    indexes.push(index);
+    index += target.length;
+  }
+  return indexes;
+}
+
 function findNumbers(searchString: string) {
-  let firstNumber: number;
-  let secondNumber: number;
   const textNumberIndexes = Object.keys(numObj)
     .map((key) => {
       return { [searchString.indexOf(key)]: key };
@@ -44,10 +53,6 @@ function findNumbers(searchString: string) {
     .filter((obj) => {
       return Object.keys(obj)[0] != '-1';
     });
-  console.log(
-    '🚀 ~ file: Puzzle.ts:47 ~ findNumbers ~ textNumberIndexes:',
-    textNumberIndexes
-  );
 
   const realNumberIndexes = Object.values(numObj)
     .map((value) => {
@@ -56,49 +61,48 @@ function findNumbers(searchString: string) {
     .filter((obj) => {
       return Object.keys(obj)[0] != '-1';
     });
-  console.log(
-    '🚀 ~ file: Puzzle.ts:56 ~ findNumbers ~ realNumberIndexes:',
-    realNumberIndexes
-  );
 
-  if (
-    Object.keys(realNumberIndexes[0])[0] > Object.keys(textNumberIndexes[0])[0]
-  ) {
-    const firstValue = Object.values(textNumberIndexes[0])[0];
-    firstNumber = numObj[firstValue];
-  } else {
-    firstNumber = Object.values(realNumberIndexes[0])[0];
-  }
+  const combined = [...textNumberIndexes, ...realNumberIndexes];
 
-  if (
-    Object.keys(realNumberIndexes[0]).at(-1) <
-    Object.keys(textNumberIndexes[0]).at(-1)
-  ) {
-    const secondValue = Object.values(textNumberIndexes[0]).at(-1);
-    secondNumber = numObj[secondValue];
-  } else {
-    secondNumber = Object.values(realNumberIndexes[0]).at(-1);
-  }
+  const sortedCombined = combined.slice().sort((a, b) => {
+    const keyA = parseInt(Object.keys(a)[0]);
+    const keyB = parseInt(Object.keys(b)[0]);
+    return keyA - keyB;
+  });
+  console.log(sortedCombined);
 
-  return [firstNumber, secondNumber];
+  const firstValue = Object.values(sortedCombined[0])[0];
+  const firstNumber =
+    typeof firstValue == 'string' ? numObj[firstValue] : firstValue;
+
+  const secondValue = Object.values(sortedCombined.at(-1))[0];
+  const secondNumber =
+    typeof secondValue == 'string' ? numObj[secondValue] : secondValue;
+
+  return [firstNumber.toString(), secondNumber.toString()].filter(Boolean);
 }
-console.log(findNumbers('onetwo'));
 
 const second = (input: string) => {
   const lines = input.split('\n');
+  let result;
   const lineNumbers = lines.map((line) => {
-    const numbers: string[] = line.match(/\d/g);
+    const numbers: string[] = findNumbers(line);
     if (numbers?.length >= 2) {
-      return parseInt(numbers[0].concat(numbers.at(-1)));
+      result = parseInt(numbers[0].concat(numbers.at(-1)));
     } else if (numbers?.length === 1) {
-      return parseInt(numbers[0].concat(numbers[0]));
+      result = parseInt(numbers[0].concat(numbers[0]));
     } else {
-      return 0;
+      result = 0;
     }
+    console.log(line, result);
+    return result;
   });
+
   const sum = lineNumbers.reduce((acc, curr) => {
     return acc + curr;
   }, 0);
+  console.log(sum);
+
   return sum;
 };
 
