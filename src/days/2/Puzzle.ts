@@ -1,4 +1,6 @@
 const first = (input: string) => {
+  const lines = input.split('\n');
+
   return 'solution 1';
 };
 
