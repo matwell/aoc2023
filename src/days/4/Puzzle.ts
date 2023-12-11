@@ -1,4 +1,8 @@
+import { linesToCards } from './utils';
+
 const first = (input: string) => {
+  const lines = input.split('\n');
+  const cards = linesToCards(lines);
   return 'solution 1';
 };
 
