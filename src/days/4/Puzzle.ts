@@ -4,6 +4,7 @@ import {
   addWinsToCards,
   generateConsecutiveCards,
   CardWithWins,
+  calculateCopies,
 } from './utils';
 
 const first = (input: string) => {
@@ -22,21 +23,30 @@ const second = (input: string) => {
   const lines = input.split('\n');
   const cards: Card[] = linesToCards(lines);
   const cardsWithNumberOfWins = addWinsToCards(cards);
-  let copies: CardWithWins[] = cardsWithNumberOfWins.slice();
+  let result: number = 0;
+  // let copies: CardWithWins[] = cardsWithNumberOfWins.slice();
 
-  for (let i = 0; i < copies.length; i++) {
-    if (copies[i].wins > 0) {
-      const newCards = generateConsecutiveCards(
-        cardsWithNumberOfWins,
-        copies[i].cardNumber + 1,
-        copies[i].wins
-      );
+  // for (let i = 0; i < copies.length; i++) {
+  //   if (copies[i].wins > 0) {
+  //     const newCards = generateConsecutiveCards(
+  //       cardsWithNumberOfWins,
+  //       copies[i].cardNumber + 1,
+  //       copies[i].wins
+  //     );
 
-      copies = copies.concat(newCards);
-    }
-  }
+  //     copies = copies.concat(newCards);
+  //   }
+  // }
+  cardsWithNumberOfWins.forEach((element, i) => {
+    console.log(`*****${i}*****`);
 
-  return copies.length;
+    result =
+      i === 0
+        ? result + calculateCopies(cardsWithNumberOfWins.slice())
+        : result + calculateCopies(cardsWithNumberOfWins.slice(i));
+  });
+
+  return result;
 };
 
 const expectedSecondSolution = 'solution 2';

@@ -80,4 +80,3 @@ test('Generate consecutive cards', () => {
         wins: 1,
     }])
 })
-

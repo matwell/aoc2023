@@ -77,9 +77,15 @@ export function generateConsecutiveCards(
 }
 
 export function calculateCopies(cards: CardWithWins[]): number {
-  if (cards[0].wins === 0) {
+  cards.forEach((card) => {
+    console.log(card.cardNumber);
+  });
+
+  if (cards[0] === undefined || cards[0].wins === 0) {
     return 0;
   } else {
-    return cards[0].wins + calculateCopies(cards.slice(1, cards[0].wins + 1));
+    const nextCards = cards.slice(1, cards[0].wins + 1);
+
+    return cards[0].wins + 1 + calculateCopies(nextCards);
   }
 }
