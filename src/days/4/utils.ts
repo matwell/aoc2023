@@ -5,6 +5,11 @@ export type Card = {
   points: number;
 };
 
+export type CardWithWins = {
+  cardNumber: number;
+  wins: number;
+};
+
 export function calculatePoints(
   winningNumbers: number[],
   numbersOnCard: number[]
@@ -17,6 +22,20 @@ export function calculatePoints(
   });
   return points;
 }
+
+export function calculateWins(
+  winningNumbers: number[],
+  numbersOnCard: number[]
+): number {
+  let points = 0;
+  numbersOnCard.forEach((number) => {
+    if (winningNumbers.includes(number)) {
+      points++;
+    }
+  });
+  return points;
+}
+
 export function linesToCards(lines: string[]): Card[] {
   const cards: Card[] = lines.map((line) => {
     const splitLine = line.split(/\s+/);
@@ -38,4 +57,29 @@ export function linesToCards(lines: string[]): Card[] {
     };
   });
   return cards;
+}
+
+export function addWinsToCards(cards: Card[]): CardWithWins[] {
+  return cards.map((card) => {
+    return {
+      cardNumber: card.cardNumber,
+      wins: calculateWins(card.winningNumbers, card.numbersOnCard),
+    };
+  });
+}
+
+export function generateConsecutiveCards(
+  cards: CardWithWins[],
+  startCard: number,
+  numOfCards: number
+) {
+  return cards.slice(startCard - 1, startCard + numOfCards - 1);
+}
+
+export function calculateCopies(cards: CardWithWins[]): number {
+  if (cards[0].wins === 0) {
+    return 0;
+  } else {
+    return cards[0].wins + calculateCopies(cards.slice(1, cards[0].wins + 1));
+  }
 }
