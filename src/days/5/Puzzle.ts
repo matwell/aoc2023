@@ -58,7 +58,34 @@ const second = (input: string) => {
     seeds.push(...generateConsecutiveNumbers(seedRanges[i], seedRanges[i + 1]));
   }
 
-  return 'solution 2';
+  const locations = seeds.map((seed) => {
+    const soil = sourceToDestination(almanac, seed, 'seed-to-soil');
+    const fertilizer = sourceToDestination(almanac, soil, 'soil-to-fertilizer');
+    const water = sourceToDestination(
+      almanac,
+      fertilizer,
+      'fertilizer-to-water'
+    );
+    const light = sourceToDestination(almanac, water, 'water-to-light');
+    const temperature = sourceToDestination(
+      almanac,
+      light,
+      'light-to-temperature'
+    );
+    const humidity = sourceToDestination(
+      almanac,
+      temperature,
+      'temperature-to-humidity'
+    );
+    const location = sourceToDestination(
+      almanac,
+      humidity,
+      'humidity-to-location'
+    );
+    return location;
+  });
+
+  return Math.min(...locations);
 };
 
 const expectedSecondSolution = 'solution 2';
